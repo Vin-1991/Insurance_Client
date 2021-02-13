@@ -13,10 +13,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import { trackPromise } from 'react-promise-tracker';
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import AddIcon from "@material-ui/icons/Add";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
@@ -74,6 +70,18 @@ export default function PolicyDetailsDataTable() {
 
     const handleClose = () => {
         setOpen(false);
+        setSelectedVehicleSegment('');
+        setSelectedFuelType('');
+        setSelectedCustomerGender('');
+        setSelectedCustomerIncomeGroups('');
+        setSelectedCustomerRegions('');
+        setSelectedBodilyInjuryLiability('');
+        setSelectedPersonalInjuryProtection('');
+        setSelectedPropertyDamageLiability('');
+        setSelectedCollision('');
+        setSelectedComprehensive('');
+        setSelectedCustomerMaritalStatus('');
+        setPremiumValue('');
     };
 
     const handleAlertClose = () => {
@@ -154,14 +162,44 @@ export default function PolicyDetailsDataTable() {
         }
     };
 
+    const saveUpdatedPolicyDetails = async () => {
+        try {
+
+            const response = await
+                axios.post('/api/updatePolicyDetails/', {
+                    PolicyId: getSelectedPolicyData.POLICY_ID,
+                    Premium: getPremiumValue === '' ? getSelectedPolicyData.PREMIUM : getPremiumValue,
+                    VehicleSegment: getSelectedVehicleSegment === '' ? getSelectedPolicyData.VEHICLE_SEGMENT : getSelectedVehicleSegment,
+                    FuelType: getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType,
+                    BodyInjuryLiability: getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability,
+                    PersonalInjuryProtection: getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection,
+                    PropertyDamageLiability: getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability,
+                    Collision: getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision,
+                    Comprehensive: getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive,
+                    Gender: getSelectedCustomerGender === '' ? getSelectedPolicyData.CUSTOMER_GENDER : getSelectedCustomerGender,
+                    IncomeGroup: getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups,
+                    Region: getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions,
+                    MaritalStatus: getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus
+                });
+
+            if (response.status === 200) {
+                handleClose();
+                setAlertOpen(true);
+                getAllPoliciesDetails();
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
-        trackPromise(getAllPoliciesDetails());
-        trackPromise(getAllVehicleSegments());
-        trackPromise(getFuelType());
-        trackPromise(getCustomerGender());
-        trackPromise(getCustomerIncomeGroups());
-        trackPromise(getCustomerRegions());
-        trackPromise(getBoolValues());
+        getAllPoliciesDetails();
+        getAllVehicleSegments();
+        getFuelType();
+        getCustomerGender();
+        getCustomerIncomeGroups();
+        getCustomerRegions();
+        getBoolValues();
     }, [])
 
     const options = {
@@ -208,11 +246,12 @@ export default function PolicyDetailsDataTable() {
                             <form className={classes.root} noValidate autoComplete="off">
                                 <TextField
                                     error={validationError}
+                                    type="number"
                                     margin="dense"
                                     id="premium"
                                     label="Premium"
                                     fullWidth
-                                    value={getPremiumValue}
+                                    value={getPremiumValue === '' ? getSelectedPolicyData.PREMIUM : getPremiumValue}
                                     onChange={(event) => { setPremiumValue(event.target.value); validatePremiumField(event.target.value) }}
                                     helperText={premiumValidationMessage}
                                 />
@@ -234,7 +273,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedVehicleSegment}
+                                    value={getSelectedVehicleSegment === '' ? getSelectedPolicyData.VEHICLE_SEGMENT : getSelectedVehicleSegment}
                                     onChange={(event) => setSelectedVehicleSegment(event.target.value)}
                                 >
                                     {getVehicleSegmentsData.map((option, index) => {
@@ -249,7 +288,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedFuelType}
+                                    value={getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType}
                                     onChange={(event) => setSelectedFuelType(event.target.value)}
                                 >
                                     {getFuelTypesData.map((option, index) => {
@@ -264,7 +303,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedBodilyInjuryLiability}
+                                    value={getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability}
                                     onChange={(event) => setSelectedBodilyInjuryLiability(event.target.value)}
                                 >
                                     {getBoolValuesData.map((option, index) => {
@@ -279,7 +318,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedPersonalInjuryProtection}
+                                    value={getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection}
                                     onChange={(event) => setSelectedPersonalInjuryProtection(event.target.value)}
                                 >
                                     {getBoolValuesData.map((option, index) => {
@@ -294,7 +333,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedPropertyDamageLiability}
+                                    value={getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability}
                                     onChange={(event) => setSelectedPropertyDamageLiability(event.target.value)}
                                 >
                                     {getBoolValuesData.map((option, index) => {
@@ -309,7 +348,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedCollision}
+                                    value={getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision}
                                     onChange={(event) => setSelectedCollision(event.target.value)}
                                 >
                                     {getBoolValuesData.map((option, index) => {
@@ -324,7 +363,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedComprehensive}
+                                    value={getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive}
                                     onChange={(event) => setSelectedComprehensive(event.target.value)}
                                 >
                                     {getBoolValuesData.map((option, index) => {
@@ -349,7 +388,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedCustomerGender}
+                                    value={getSelectedCustomerGender === '' ? getSelectedPolicyData.CUSTOMER_GENDER : getSelectedCustomerGender}
                                     onChange={(event) => setSelectedCustomerGender(event.target.value)}
                                 >
                                     {getCustomerGendersData.map((option, index) => {
@@ -364,7 +403,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedCustomerIncomeGroups}
+                                    value={getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups}
                                     onChange={(event) => setSelectedCustomerIncomeGroups(event.target.value)}
                                 >
                                     {getCustomerIncomeGroupsData.map((option, index) => {
@@ -379,7 +418,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedCustomerRegions}
+                                    value={getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions}
                                     onChange={(event) => setSelectedCustomerRegions(event.target.value)}
                                 >
                                     {getCustomerRegionsData.map((option, index) => {
@@ -394,7 +433,7 @@ export default function PolicyDetailsDataTable() {
                                 <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
-                                    value={getSelectedCustomerMaritalStatus}
+                                    value={getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus}
                                     onChange={(event) => setSelectedCustomerMaritalStatus(event.target.value)}
                                 >
                                     {getBoolValuesData.map((option, index) => {
@@ -406,7 +445,7 @@ export default function PolicyDetailsDataTable() {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="primary"
+                    <Button onClick={saveUpdatedPolicyDetails} variant="contained" color="primary"
                         disabled={validationError === true}>
                         Submit
                     </Button>
@@ -415,7 +454,6 @@ export default function PolicyDetailsDataTable() {
                     </Button>
                 </DialogActions>
             </Dialog>
-
 
             <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
                 <Alert onClose={handleClose} severity="success">

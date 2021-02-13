@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Insurance_Client_App\react_app\components\app.js" />
+    <Content Include="Insurance_Client_App\react_app\components\charts\lineChart.js" />
     <Content Include="Insurance_Client_App\react_app\components\charts\barChart.js" />
     <Content Include="Insurance_Client_App\react_app\components\datatables\policyDetailsDatatable.js" />
     <Content Include="Insurance_Client_App\react_app\components\index.js" />
@@ -57,6 +58,12 @@
     <Content Include="Insurance_Client_App\react_app\html\clientdetialsview.html" />
     <Content Include="Insurance_Client_App\react_app\html\layout.html" />
     <Content Include="Insurance_Client_App\react_app\package.json" />
+    <Content Include="Insurance_Client_App\react_app\reduxSaga\actions.js" />
+    <Content Include="Insurance_Client_App\react_app\reduxSaga\actionTypes.js" />
+    <Content Include="Insurance_Client_App\react_app\reduxSaga\reducers.js" />
+    <Content Include="Insurance_Client_App\react_app\reduxSaga\rootSaga.js" />
+    <Content Include="Insurance_Client_App\react_app\reduxSaga\store.js" />
+    <Content Include="Insurance_Client_App\react_app\reduxSaga\subscrioberSaga.js" />
     <Content Include="Insurance_Client_App\react_app\webpack.config.js" />
     <Content Include="requirements.txt" />
   </ItemGroup>
@@ -71,6 +78,7 @@
     <Folder Include="Insurance_Client_App\react_app\components\datatables\" />
     <Folder Include="Insurance_Client_App\react_app\dist\" />
     <Folder Include="Insurance_Client_App\react_app\html\" />
+    <Folder Include="Insurance_Client_App\react_app\reduxSaga\" />
     <Folder Include="Insurance_Client_App\react_app\public\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />

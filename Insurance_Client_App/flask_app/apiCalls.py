@@ -75,3 +75,50 @@ def getBarChartData():
     chartData = sql_engine.execute(getChartData,extractQuerParams)
     jsonChartData = dbModel.get_no_of_policy_bought_in_region_schema.dump(chartData)
     return jsonify(jsonChartData)
+
+@app.route('/api/updatePolicyDetails/',methods=['POST'])
+def saveUpdatedPolicyDetails():
+    extractQuerParams = request.get_json()
+    print(extractQuerParams)
+    policyId = extractQuerParams['PolicyId']
+    premium = extractQuerParams['Premium']
+    vehicleSegment = extractQuerParams['VehicleSegment']
+    fuelType = extractQuerParams['FuelType']
+    bodyInjuryLiability = extractQuerParams['BodyInjuryLiability']
+    personalInjuryProtection = extractQuerParams['PersonalInjuryProtection']
+    propertyDamageLiability = extractQuerParams['PropertyDamageLiability'] 
+    collision = extractQuerParams['Collision']
+    comprehensive = extractQuerParams['Comprehensive']
+    gender = extractQuerParams['Gender']
+    incomeGroup = extractQuerParams['IncomeGroup']
+    region = extractQuerParams['Region']
+    maritalStatus = extractQuerParams['MaritalStatus']
+
+    jsonChartData = updatePolicyDetail(fuelType,vehicleSegment,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
+                                       collision,comprehensive,gender,incomeGroup,region,maritalStatus,policyId)
+    return jsonChartData
+
+
+def updatePolicyDetail(fuelType,vehicleSegment,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
+                                       collision,comprehensive,gender,incomeGroup,region,maritalStatus,policyId):
+    updateDetails = '''
+   UPDATE [dbo].[TBL_CLIENT_INSURANCE_DATA]
+   SET [FUEL] = ?
+      ,[VEHICLE_SEGMENT] = ?
+      ,[PREMIUM] = ?
+      ,[BODILY_INJURY_LIABILITY] = ?
+      ,[PERSONAL_INJURY_PROTECTION] = ?
+      ,[PROPERTY_DAMAGE_LIABILITY] = ?
+      ,[COLLISION] = ?
+      ,[COMPREHENSIVE] = ?
+      ,[CUSTOMER_GENDER] = ?
+      ,[CUSTOMER_INCOME_GROUP] = ?
+      ,[CUSTOMER_REGION] = ?
+      ,[CUSTOMER_MARITAL_STATUS] = ?
+   WHERE  [POLICY_ID] = ? '''
+    try:
+        chartData = sql_engine.execute(updateDetails,fuelType,vehicleSegment,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
+                                       collision,comprehensive,gender,incomeGroup,region,maritalStatus,policyId)
+        return 'Updated Successfully'
+    except:
+        return 'An error occured'

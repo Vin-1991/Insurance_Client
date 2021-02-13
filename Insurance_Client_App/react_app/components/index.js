@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../components/App';
-//import BusyIndicator from '../components/utils/busyIndicator';
+import { Provider } from 'react-redux';
+import configureStore from '../reduxSaga/store';
+
+const store = configureStore();
 
 ReactDOM.render(
-    <React.Fragment>
+    <Provider store={store}>
         <App />
-        
-    </React.Fragment>, document.getElementById("content"));
+    </Provider>, document.getElementById("content"));
