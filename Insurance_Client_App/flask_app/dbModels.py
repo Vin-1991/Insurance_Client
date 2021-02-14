@@ -75,7 +75,10 @@ get_tbl_bool_values_schema = GetTBLBoolValuesSchema(many=True)
 class GetVWNoOfPolicyBoughtInRegionSchema(marsh_mallow.Schema):
     class Meta:
         fields = ('UNIQUE_MONTH'
-      ,'NO_OF_POLICIES_BOUGHT'
-      ,'CUSTOMER_REGION')
+      ,'CUSTOMER_REGION'
+      ,'North'
+      ,'South'
+      ,'East'
+      ,'West')
 
 get_no_of_policy_bought_in_region_schema = GetVWNoOfPolicyBoughtInRegionSchema(many=True)

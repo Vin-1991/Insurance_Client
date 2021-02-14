@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import App from '../components/App';
-import { Provider } from 'react-redux';
-import configureStore from '../reduxSaga/store';
 
-const store = configureStore();
 
 ReactDOM.render(
-    <Provider store={store}>
+    <Fragment>
         <App />
-    </Provider>, document.getElementById("content"));
+    </Fragment>,
+    document.getElementById("content"));

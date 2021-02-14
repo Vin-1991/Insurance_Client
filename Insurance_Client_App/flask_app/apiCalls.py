@@ -21,7 +21,7 @@ print('Connection to database has been established succesfully..')
 
 @app.route('/api/getPoliciesDetails/',methods=['GET'])
 def getClientPolicyDetails():
-    getPoliciesData = "Select * from [dbo].[TBL_CLIENT_INSURANCE_DATA]"
+    getPoliciesData = "Select * from [dbo].[VW_POLICY_AND_CUSTOMER_DETAILS_DATA]"
     policies_list = sql_engine.execute(getPoliciesData)
     jsonPoliciesData = dbModel.get_tbl_client_insurance_data_schema.dump(policies_list)
     return jsonify(jsonPoliciesData)
@@ -68,57 +68,71 @@ def getBoolValues():
     jsonBoolValuesData = dbModel.get_tbl_bool_values_schema.dump(values_list)
     return jsonify(jsonBoolValuesData)
 
-@app.route('/api/getBarChartData/',methods=['GET'])
-def getBarChartData():
-    extractQuerParams = request.args.get('region')
-    getChartData = "Select * from [dbo].[VW_NO_OF_POLICY_BOUGHT_IN_REGION] where CUSTOMER_REGION = ?"
-    chartData = sql_engine.execute(getChartData,extractQuerParams)
-    jsonChartData = dbModel.get_no_of_policy_bought_in_region_schema.dump(chartData)
-    return jsonify(jsonChartData)
-
 @app.route('/api/updatePolicyDetails/',methods=['POST'])
 def saveUpdatedPolicyDetails():
     extractQuerParams = request.get_json()
-    print(extractQuerParams)
     policyId = extractQuerParams['PolicyId']
     premium = extractQuerParams['Premium']
-    vehicleSegment = extractQuerParams['VehicleSegment']
     fuelType = extractQuerParams['FuelType']
     bodyInjuryLiability = extractQuerParams['BodyInjuryLiability']
     personalInjuryProtection = extractQuerParams['PersonalInjuryProtection']
     propertyDamageLiability = extractQuerParams['PropertyDamageLiability'] 
     collision = extractQuerParams['Collision']
     comprehensive = extractQuerParams['Comprehensive']
-    gender = extractQuerParams['Gender']
-    incomeGroup = extractQuerParams['IncomeGroup']
-    region = extractQuerParams['Region']
-    maritalStatus = extractQuerParams['MaritalStatus']
 
-    jsonChartData = updatePolicyDetail(fuelType,vehicleSegment,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
-                                       collision,comprehensive,gender,incomeGroup,region,maritalStatus,policyId)
+    jsonChartData = updatePolicyDetails(fuelType,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
+                                       collision,comprehensive,policyId)
     return jsonChartData
 
-
-def updatePolicyDetail(fuelType,vehicleSegment,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
-                                       collision,comprehensive,gender,incomeGroup,region,maritalStatus,policyId):
+def updatePolicyDetails(fuelType,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
+                                       collision,comprehensive,policyId):
     updateDetails = '''
-   UPDATE [dbo].[TBL_CLIENT_INSURANCE_DATA]
+   UPDATE [dbo].[TBL_CLIENT_POLICIES_DATA]
    SET [FUEL] = ?
-      ,[VEHICLE_SEGMENT] = ?
       ,[PREMIUM] = ?
       ,[BODILY_INJURY_LIABILITY] = ?
       ,[PERSONAL_INJURY_PROTECTION] = ?
       ,[PROPERTY_DAMAGE_LIABILITY] = ?
       ,[COLLISION] = ?
       ,[COMPREHENSIVE] = ?
-      ,[CUSTOMER_GENDER] = ?
-      ,[CUSTOMER_INCOME_GROUP] = ?
-      ,[CUSTOMER_REGION] = ?
-      ,[CUSTOMER_MARITAL_STATUS] = ?
    WHERE  [POLICY_ID] = ? '''
     try:
-        chartData = sql_engine.execute(updateDetails,fuelType,vehicleSegment,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
-                                       collision,comprehensive,gender,incomeGroup,region,maritalStatus,policyId)
-        return 'Updated Successfully'
+        chartData = sql_engine.execute(updateDetails,fuelType,premium,bodyInjuryLiability,personalInjuryProtection,propertyDamageLiability,
+                                       collision,comprehensive,policyId)
+        return 'Policy details updated successfully'
     except:
         return 'An error occured'
+
+@app.route('/api/updateCustomerDetails/',methods=['POST'])
+def saveUpdatedCustomerDetails():
+    extractQuerParams = request.get_json()
+    customerId = extractQuerParams['CustomerId']
+    incomeGroup = extractQuerParams['IncomeGroup']
+    region = extractQuerParams['Region']
+    maritalStatus = extractQuerParams['MaritalStatus']
+
+    jsonChartData = updateCustomerDetails(incomeGroup,region,maritalStatus,customerId)
+    return jsonChartData
+
+def updateCustomerDetails(incomeGroup,region,maritalStatus,customerId):
+    updateDetails = '''
+   UPDATE [dbo].[TBL_CLIENT_PERSONAL_DATA]
+   SET [CUSTOMER_INCOME_GROUP] = ?
+      ,[CUSTOMER_REGION] = ?
+      ,[CUSTOMER_MARITAL_STATUS] = ?
+   WHERE  [CUSTOMER_ID] = ? '''
+    try:
+        chartData = sql_engine.execute(updateDetails,incomeGroup,region,maritalStatus,customerId)
+        return 'Customer details updated successfully'
+    except:
+        return 'An error occured'
+
+@app.route('/api/getBarChartData/',methods=['POST'])
+def getBarChartData():
+    extractQuerParams = request.get_json()
+    region = extractQuerParams['region']
+    print(region)
+    getChartData = "EXEC SP_NO_OF_POLICY_BOUGHT_IN_REGION @region=?"
+    chartData = sql_engine.execute(getChartData,region)
+    jsonChartData = dbModel.get_no_of_policy_bought_in_region_schema.dump(chartData)
+    return jsonify(jsonChartData)

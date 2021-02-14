@@ -10,9 +10,7 @@ import LineChart from '../charts/lineChart';
 
 
 const useStyles = makeStyles((theme) => ({
-
     formControl: {
-        margin: theme.spacing(1),
         minWidth: 220,
     }
 }));
@@ -36,8 +34,8 @@ export default function PolicyDashboard() {
 
     const getChartData = async (selectedRegion) => {
         try {
-            const response = await axios.get('/api/getBarChartData/', {
-                params: { region: selectedRegion }
+            const response = await axios.post('/api/getBarChartData/', {
+                region: selectedRegion
             });
             setBarChartData(response.data);
         } catch (err) {
@@ -58,7 +56,7 @@ export default function PolicyDashboard() {
         <Fragment>
             <Grid item xs={12} md={12} lg={12}>
                 <FormControl className={classes.formControl} >
-                    <InputLabel id="demo-simple-select-helper-label">Customer Region</InputLabel>
+                    <InputLabel id="demo-simple-select-helper-label">Select Region</InputLabel>
                     <Select
                         labelId="demo-simple-select-helper-label"
                         id="demo-simple-select-helper"
@@ -70,7 +68,7 @@ export default function PolicyDashboard() {
                         })}
                     </Select>
                 </FormControl>
-                <LineChart chartData={getBarChartData} />
+                {getBarChartData.length > 0 && <LineChart chartData={getBarChartData} />}
             </Grid>
         </Fragment >
     );

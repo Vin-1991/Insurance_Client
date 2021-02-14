@@ -18,7 +18,6 @@ import Grid from '@material-ui/core/Grid';
 import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
 import PolicyRoundedIcon from '@material-ui/icons/PolicyRounded';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-//import '../dist/scss/App.scss';
 
 import PolicyDetails from '../components/views/policyDetailsView';
 import PolicyDashboard from '../components/views/policyDashboardView';

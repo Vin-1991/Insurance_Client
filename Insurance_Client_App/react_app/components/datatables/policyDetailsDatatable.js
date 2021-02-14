@@ -12,10 +12,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -23,9 +25,12 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         minWidth: 120,
     },
-    padBottom: {
+    section1: {
         paddingBottom: '5px'
-    }
+    },
+    section2: {
+        paddingTop: '5px'
+    },
 }));
 
 function Alert(props) {
@@ -33,6 +38,7 @@ function Alert(props) {
 }
 
 export default function PolicyDetailsDataTable() {
+
     const classes = useStyles();
 
     const [getPolicyDetailsData, setPolicyDetailsData] = useState([]);
@@ -45,9 +51,7 @@ export default function PolicyDetailsDataTable() {
 
     const [getSelectedPolicyData, setSelectedPolicyData] = useState([]);
 
-    const [getSelectedVehicleSegment, setSelectedVehicleSegment] = useState('');
     const [getSelectedFuelType, setSelectedFuelType] = useState('');
-    const [getSelectedCustomerGender, setSelectedCustomerGender] = useState('');
     const [getSelectedCustomerIncomeGroups, setSelectedCustomerIncomeGroups] = useState('');
     const [getSelectedCustomerRegions, setSelectedCustomerRegions] = useState('');
     const [getSelectedBodilyInjuryLiability, setSelectedBodilyInjuryLiability] = useState('');
@@ -56,12 +60,13 @@ export default function PolicyDetailsDataTable() {
     const [getSelectedCollision, setSelectedCollision] = useState('');
     const [getSelectedComprehensive, setSelectedComprehensive] = useState('');
     const [getSelectedCustomerMaritalStatus, setSelectedCustomerMaritalStatus] = useState('');
-    const [getPremiumValue, setPremiumValue] = useState('');
+    const [getPremiumValue, setPremiumValue] = useState(0);
 
 
     const [open, setOpen] = useState(false);
     const [alertOpen, setAlertOpen] = useState(false);
     const [validationError, setValidationError] = useState(false);
+    const [disableButton, setDisableButton] = useState(true);
     const [premiumValidationMessage, setPremiumValidationMessage] = useState('');
 
     const handleClickOpen = () => {
@@ -70,9 +75,10 @@ export default function PolicyDetailsDataTable() {
 
     const handleClose = () => {
         setOpen(false);
-        setSelectedVehicleSegment('');
+        setDisableButton(true);
+        setValidationError(false);
+        setPremiumValidationMessage('');
         setSelectedFuelType('');
-        setSelectedCustomerGender('');
         setSelectedCustomerIncomeGroups('');
         setSelectedCustomerRegions('');
         setSelectedBodilyInjuryLiability('');
@@ -81,7 +87,7 @@ export default function PolicyDetailsDataTable() {
         setSelectedCollision('');
         setSelectedComprehensive('');
         setSelectedCustomerMaritalStatus('');
-        setPremiumValue('');
+        setPremiumValue(0);
     };
 
     const handleAlertClose = () => {
@@ -162,33 +168,66 @@ export default function PolicyDetailsDataTable() {
         }
     };
 
+    const handleOperationsAfterUpdate = () => {
+        handleClose();
+        setAlertOpen(true);
+        getAllPoliciesDetails();
+    }
+
+    const checkForSelectedValues = (condition) => {
+        if (condition === 'policy' && (getPremiumValue !== 0 || getSelectedFuelType !== '' || getSelectedBodilyInjuryLiability !== '' || getSelectedPersonalInjuryProtection !== '' ||
+            getSelectedPropertyDamageLiability !== '' || getSelectedCollision !== '' || getSelectedComprehensive !== '')) {
+            return true;
+        }
+        else if (condition === 'customer' && (getSelectedCustomerIncomeGroups !== '' || getSelectedCustomerRegions !== '' || getSelectedCustomerMaritalStatus !== '')) {
+            return true;
+        }
+        return false;
+    }
+
     const saveUpdatedPolicyDetails = async () => {
-        try {
+        const validateAndExecute = checkForSelectedValues('policy');
+        if (validateAndExecute) {
+            try {
+                const response = await
+                    axios.post('/api/updatePolicyDetails/', {
+                        PolicyId: getSelectedPolicyData.POLICY_ID,
+                        Premium: getPremiumValue === 0 ? getSelectedPolicyData.PREMIUM : getPremiumValue,
+                        FuelType: getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType,
+                        BodyInjuryLiability: getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability,
+                        PersonalInjuryProtection: getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection,
+                        PropertyDamageLiability: getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability,
+                        Collision: getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision,
+                        Comprehensive: getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive,
+                    });
 
-            const response = await
-                axios.post('/api/updatePolicyDetails/', {
-                    PolicyId: getSelectedPolicyData.POLICY_ID,
-                    Premium: getPremiumValue === '' ? getSelectedPolicyData.PREMIUM : getPremiumValue,
-                    VehicleSegment: getSelectedVehicleSegment === '' ? getSelectedPolicyData.VEHICLE_SEGMENT : getSelectedVehicleSegment,
-                    FuelType: getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType,
-                    BodyInjuryLiability: getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability,
-                    PersonalInjuryProtection: getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection,
-                    PropertyDamageLiability: getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability,
-                    Collision: getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision,
-                    Comprehensive: getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive,
-                    Gender: getSelectedCustomerGender === '' ? getSelectedPolicyData.CUSTOMER_GENDER : getSelectedCustomerGender,
-                    IncomeGroup: getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups,
-                    Region: getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions,
-                    MaritalStatus: getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus
-                });
-
-            if (response.status === 200) {
-                handleClose();
-                setAlertOpen(true);
-                getAllPoliciesDetails();
+                if (response.status === 200) {
+                    handleOperationsAfterUpdate();
+                }
+            } catch (err) {
+                console.log(err);
             }
-        } catch (err) {
-            console.log(err);
+        }
+    };
+
+    const saveUpdatedCustomerDetails = async () => {
+        const validateAndExecute = checkForSelectedValues('customer');
+        if (validateAndExecute) {
+            try {
+                const response = await
+                    axios.post('/api/updateCustomerDetails/', {
+                        CustomerId: getSelectedPolicyData.CUSTOMER_ID,
+                        IncomeGroup: getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups,
+                        Region: getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions,
+                        MaritalStatus: getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus
+                    });
+
+                if (response.status === 200) {
+                    handleOperationsAfterUpdate();
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
     };
 
@@ -229,9 +268,10 @@ export default function PolicyDetailsDataTable() {
 
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth
                 maxWidth="xl">
-                <DialogTitle id="form-dialog-title">Add New Shift Allowance</DialogTitle>
+                <DialogTitle id="form-dialog-title">Update Policy Details</DialogTitle>
+
                 <DialogContent className={classes.root}>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} className={classes.section1}>
                         <Grid item xs={3}>
                             <TextField
                                 margin="dense"
@@ -251,8 +291,8 @@ export default function PolicyDetailsDataTable() {
                                     id="premium"
                                     label="Premium"
                                     fullWidth
-                                    value={getPremiumValue === '' ? getSelectedPolicyData.PREMIUM : getPremiumValue}
-                                    onChange={(event) => { setPremiumValue(event.target.value); validatePremiumField(event.target.value) }}
+                                    value={getPremiumValue === 0 ? getSelectedPolicyData.PREMIUM : getPremiumValue}
+                                    onChange={(event) => { setPremiumValue(event.target.value); validatePremiumField(event.target.value); setDisableButton(false); }}
                                     helperText={premiumValidationMessage}
                                 />
                             </form>
@@ -268,19 +308,14 @@ export default function PolicyDetailsDataTable() {
                             />
                         </Grid>
                         <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Vehicle Segment</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedVehicleSegment === '' ? getSelectedPolicyData.VEHICLE_SEGMENT : getSelectedVehicleSegment}
-                                    onChange={(event) => setSelectedVehicleSegment(event.target.value)}
-                                >
-                                    {getVehicleSegmentsData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.VEHICLE_SEGMENT}>{option.VEHICLE_SEGMENT}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
+                            <TextField
+                                margin="dense"
+                                id="vehicleSegment"
+                                label="Vehicle Segment"
+                                disabled
+                                fullWidth
+                                value={getSelectedPolicyData.VEHICLE_SEGMENT}
+                            />
                         </Grid>
                         <Grid item xs={3}>
                             <FormControl className={classes.formControl} fullWidth>
@@ -289,7 +324,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType}
-                                    onChange={(event) => setSelectedFuelType(event.target.value)}
+                                    onChange={(event) => { setSelectedFuelType(event.target.value); setDisableButton(false); }}
                                 >
                                     {getFuelTypesData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.FUEL}>{option.FUEL}</MenuItem>;
@@ -304,7 +339,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability}
-                                    onChange={(event) => setSelectedBodilyInjuryLiability(event.target.value)}
+                                    onChange={(event) => { setSelectedBodilyInjuryLiability(event.target.value); setDisableButton(false); }}
                                 >
                                     {getBoolValuesData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
@@ -319,7 +354,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection}
-                                    onChange={(event) => setSelectedPersonalInjuryProtection(event.target.value)}
+                                    onChange={(event) => { setSelectedPersonalInjuryProtection(event.target.value); setDisableButton(false); }}
                                 >
                                     {getBoolValuesData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
@@ -334,7 +369,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability}
-                                    onChange={(event) => setSelectedPropertyDamageLiability(event.target.value)}
+                                    onChange={(event) => { setSelectedPropertyDamageLiability(event.target.value); setDisableButton(false); }}
                                 >
                                     {getBoolValuesData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
@@ -349,7 +384,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision}
-                                    onChange={(event) => setSelectedCollision(event.target.value)}
+                                    onChange={(event) => { setSelectedCollision(event.target.value); setDisableButton(false); }}
                                 >
                                     {getBoolValuesData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
@@ -364,7 +399,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive}
-                                    onChange={(event) => setSelectedComprehensive(event.target.value)}
+                                    onChange={(event) => { setSelectedComprehensive(event.target.value); setDisableButton(false); }}
                                 >
                                     {getBoolValuesData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
@@ -372,6 +407,10 @@ export default function PolicyDetailsDataTable() {
                                 </Select>
                             </FormControl>
                         </Grid>
+                    </Grid>
+
+                    <Divider variant="middle" />
+                    <Grid container spacing={3} className={classes.section2}>
                         <Grid item xs={3}>
                             <TextField
                                 margin="dense"
@@ -383,19 +422,14 @@ export default function PolicyDetailsDataTable() {
                             />
                         </Grid>
                         <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Customer Gender</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedCustomerGender === '' ? getSelectedPolicyData.CUSTOMER_GENDER : getSelectedCustomerGender}
-                                    onChange={(event) => setSelectedCustomerGender(event.target.value)}
-                                >
-                                    {getCustomerGendersData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.CUSTOMER_GENDER}>{option.CUSTOMER_GENDER}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
+                            <TextField
+                                margin="dense"
+                                id="gender"
+                                label="Customer Gender"
+                                disabled
+                                fullWidth
+                                value={getSelectedPolicyData.CUSTOMER_GENDER}
+                            />
                         </Grid>
                         <Grid item xs={3}>
                             <FormControl className={classes.formControl} fullWidth>
@@ -404,7 +438,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups}
-                                    onChange={(event) => setSelectedCustomerIncomeGroups(event.target.value)}
+                                    onChange={(event) => { setSelectedCustomerIncomeGroups(event.target.value); setDisableButton(false); }}
                                 >
                                     {getCustomerIncomeGroupsData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.INCOME_GROUP}>{option.INCOME_GROUP}</MenuItem>;
@@ -419,7 +453,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions}
-                                    onChange={(event) => setSelectedCustomerRegions(event.target.value)}
+                                    onChange={(event) => { setSelectedCustomerRegions(event.target.value); setDisableButton(false); }}
                                 >
                                     {getCustomerRegionsData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.CUSTOMER_REGION}>{option.CUSTOMER_REGION}</MenuItem>;
@@ -434,7 +468,7 @@ export default function PolicyDetailsDataTable() {
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
                                     value={getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus}
-                                    onChange={(event) => setSelectedCustomerMaritalStatus(event.target.value)}
+                                    onChange={(event) => { setSelectedCustomerMaritalStatus(event.target.value); setDisableButton(false); }}
                                 >
                                     {getBoolValuesData.map((option, index) => {
                                         return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
@@ -445,15 +479,15 @@ export default function PolicyDetailsDataTable() {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={saveUpdatedPolicyDetails} variant="contained" color="primary"
-                        disabled={validationError === true}>
+                    <Button onClick={() => { saveUpdatedPolicyDetails(); saveUpdatedCustomerDetails(); }} variant="contained" color="primary"
+                        disabled={validationError || disableButton}>
                         Submit
                     </Button>
                     <Button onClick={handleClose} variant="outlined" color="secondary">
                         Close
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
 
             <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
                 <Alert onClose={handleClose} severity="success">
