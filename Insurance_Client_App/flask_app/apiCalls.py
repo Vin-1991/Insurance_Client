@@ -1,5 +1,5 @@
 """
-API calls method for the HR Central app flask react application.
+API calls method for the Insurance Client app flask react application.
 """
 from flask import Flask,request,jsonify
 from flask_sqlalchemy import SQLAlchemy

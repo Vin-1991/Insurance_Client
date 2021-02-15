@@ -1,5 +1,5 @@
 """
-Database models for the HR Central app flask react application.
+Database models for the Insurance Client app flask react application.
 """
 
 from flask import Flask
