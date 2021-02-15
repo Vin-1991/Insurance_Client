@@ -12,12 +12,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-
 export default function BusyIndicator() {
+
     const classes = useStyles();
     const { promiseInProgress } = usePromiseTracker();
+
     return (
+        /*Busy Indicator*/
         promiseInProgress && (
             <Backdrop className={classes.backdrop} open={promiseInProgress}>
                 <CircularProgress color="inherit" />

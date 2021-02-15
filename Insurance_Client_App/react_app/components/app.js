@@ -25,7 +25,7 @@ import PolicyDashboard from '../components/views/policyDashboardView';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
-        marginTop:'7vh'
+        marginTop: '7vh'
     },
     title: {
         flexGrow: 1,
@@ -60,13 +60,17 @@ const App = () => {
                     </Typography>
                 </Toolbar>
             </AppBar>
+
+            /*Routes*/
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="xl">
                     <Grid container spacing={2}>
                         <Router>
                             <Switch>
+                                /*Policy details component*/
                                 <Route exact path="/insurance_client_home" component={PolicyDetails} />
+                                /*Policy dashboard component*/
                                 <Route exact path="/insurance_client_dashboard" component={PolicyDashboard} />
                             </Switch>
                         </Router>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+//Get API Call function
 export const getApiCall = async (apiURL) => {
     try {
         const response = await axios.get(apiURL);
@@ -9,6 +10,7 @@ export const getApiCall = async (apiURL) => {
     }
 }
 
+//Post API Call function
 export const postApiCall = async (apiURL, params) => {
     try {
         const response = await axios.post(apiURL, params);
@@ -18,6 +20,7 @@ export const postApiCall = async (apiURL, params) => {
     }
 }
 
+//Patch API Call function
 export const patchApiCall = async (apiURL, params) => {
     try {
         const response = await axios.patch(apiURL, params);

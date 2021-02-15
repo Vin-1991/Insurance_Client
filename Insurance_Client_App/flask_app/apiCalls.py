@@ -11,14 +11,14 @@ import urllib
 import requests
 import os
 
-
+#Connection String and engine to connect to DB.
 print('Trying to connect to database..')  	
 conn_string = urllib.parse.quote_plus('Driver={SQL Server};''Server=KGS-VDI-00415\SQLEXPRESS;''Database=InsuranceClient;''Trusted_Connection=yes;')
 sql_engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % conn_string)
 print('Connection to database has been established succesfully..')
 
 
-
+#Get Api Call to get all the policy related data
 @app.route('/api/getPoliciesDetails/',methods=['GET'])
 def getClientPolicyDetails():
     getPoliciesData = "Select * from [dbo].[VW_POLICY_AND_CUSTOMER_DETAILS_DATA]"
@@ -26,6 +26,7 @@ def getClientPolicyDetails():
     jsonPoliciesData = dbModel.get_tbl_client_insurance_data_schema.dump(policies_list)
     return jsonify(jsonPoliciesData)
 
+#Get Api Call to get all the vehicle segments related data
 @app.route('/api/getAllVehicleSegments/',methods=['GET'])
 def getAllVehicleSegments():
     getVehicleSegments = "Select * from [dbo].[TBL_VEHICLE_SEGMENT]"
@@ -33,6 +34,7 @@ def getAllVehicleSegments():
     jsonSegmentsData = dbModel.get_tbl_vehicle_segment_schema.dump(segments_list)
     return jsonify(jsonSegmentsData)
 
+#Get Api Call to get all the fuel type related data
 @app.route('/api/getFuelType/',methods=['GET'])
 def getFuelType():
     getFuelTypes = "Select * from [dbo].[TBL_FUEL_TYPE]"
@@ -40,6 +42,7 @@ def getFuelType():
     jsonFuelData = dbModel.get_tbl_fuel_type_schema.dump(fuel_type_list)
     return jsonify(jsonFuelData)
 
+#Get Api Call to get all the gender related data
 @app.route('/api/getCustomerGender/',methods=['GET'])
 def getCustomerGender():
     getAllGenders = "Select * from [dbo].[TBL_CUSTOMER_GENDER]"
@@ -47,6 +50,7 @@ def getCustomerGender():
     jsonGendersData = dbModel.get_tbl_customer_gender_schema.dump(genders_list)
     return jsonify(jsonGendersData)
 
+#Get Api Call to get all the income groups related data
 @app.route('/api/getCustomerIncomeGroups/',methods=['GET'])
 def getCustomerIncomeGroups():
     getIncomeGroups = "Select * from [dbo].[TBL_CUSTOMER_INCOME_GROUP]"
@@ -61,6 +65,7 @@ def getCustomerRegions():
     jsonRegionsData = dbModel.get_tbl_customer_region_schema.dump(regions_list)
     return jsonify(jsonRegionsData)
 
+#Get Api Call to get all the bool values
 @app.route('/api/getBoolValues/',methods=['GET'])
 def getBoolValues():
     getValues = "Select * from [dbo].[TBL_BOOL_VALUES]"
@@ -68,6 +73,7 @@ def getBoolValues():
     jsonBoolValuesData = dbModel.get_tbl_bool_values_schema.dump(values_list)
     return jsonify(jsonBoolValuesData)
 
+#Update Policy related changes
 @app.route('/api/updatePolicyDetails/',methods=['PATCH'])
 def saveUpdatedPolicyDetails():
     extractQuerParams = request.get_json()
@@ -103,6 +109,7 @@ def updatePolicyDetails(fuelType,premium,bodyInjuryLiability,personalInjuryProte
     except:
         return 'An error occured'
 
+#Update Customer related changes
 @app.route('/api/updateCustomerDetails/',methods=['PATCH'])
 def saveUpdatedCustomerDetails():
     extractQuerParams = request.get_json()
@@ -127,6 +134,7 @@ def updateCustomerDetails(incomeGroup,region,maritalStatus,customerId):
     except:
         return 'An error occured'
 
+#Get line Chart data
 @app.route('/api/getLineChartData/',methods=['POST'])
 def getLineChartData():
     extractQuerParams = request.get_json()
@@ -137,6 +145,7 @@ def getLineChartData():
     jsonChartData = dbModel.get_no_of_policy_bought_in_region_schema.dump(chartData)
     return jsonify(jsonChartData)
 
+#Get Tiles KPI data
 @app.route('/api/getKPITilesData/',methods=['GET'])
 def getKPITilesData():
     getTilesData = "Select * from [dbo].[VW_POLICY_KPIS_TILE_DATA]"

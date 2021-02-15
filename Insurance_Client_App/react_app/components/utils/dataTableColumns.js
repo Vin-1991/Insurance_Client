@@ -1,3 +1,4 @@
+//Datatable policy columns
 export const PolicyDetailsColumns = [
     {
         name: "POLICY_ID",

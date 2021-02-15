@@ -24,9 +24,11 @@ export default function PolicyDashboardKPIs({ tilesData }) {
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     return (
+        /*KPI Tiles*/
         <Fragment>
             <Grid container spacing={1}>
                 <Grid item xs={12} md={4} lg={3}>
+
                     <Paper className={fixedHeightPaper} style={{ background: 'linear-gradient(45deg,#31b3e0,#1d97c2)', color: 'white' }}>
                         <Typography>Policies Bought - <strong> {tilesData[0]?.TOTAL_POLICIES_BOUGHT}</strong> </Typography>
                         <div id="chartNewDiv" style={{ width: "100%", height: "25px" }}></div>

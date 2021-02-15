@@ -40,17 +40,19 @@ export default function PolicyDashboard() {
     const [getCustomerRegionsData, setCustomerRegions] = useState([]);
     const [getSelectedCustomerRegions, setSelectedCustomerRegions] = useState('');
 
-
+    //Get Api call to get customer regions related data
     const getCustomerRegions = async () => {
         const response = await getApiCall('/api/getCustomerRegions/');
         setCustomerRegions(response);
     };
 
+    //Get Api call to get KPI tiles related data
     const getKPIsTilesData = async () => {
         const response = await getApiCall('/api/getKPITilesData/');
         setTilesData(response);
     };
 
+    //Post Api call to get line chart related data on the basis of selection
     const getChartData = async (selectedRegion) => {
         const response = await postApiCall('/api/getLineChartData/', {
             region: selectedRegion
@@ -64,12 +66,15 @@ export default function PolicyDashboard() {
     }, []);
 
     useEffect(() => {
+        //Call function when region change
         trackPromise(getChartData(getSelectedCustomerRegions));
     }, [getSelectedCustomerRegions]);
 
     return (
         <Fragment>
+            /*KPI tiles component*/
             {getTilesData.length > 0 && <PolicyDashboardKPIs tilesData={getTilesData} />}
+
             {getLineChartData.length > 0 && <Grid item xs={12} md={12} lg={12}>
                 <FormControl className={classes.formControl} >
                     <InputLabel id="demo-simple-select-helper-label">Select Region</InputLabel>
@@ -84,6 +89,8 @@ export default function PolicyDashboard() {
                         })}
                     </Select>
                 </FormControl>
+
+                /*Line Chart component*/
                 <LineChart chartData={getLineChartData} />
             </Grid>}
         </Fragment >

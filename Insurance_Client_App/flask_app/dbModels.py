@@ -56,14 +56,12 @@ class GetTBLCustomerIncomeGroupSchema(marsh_mallow.Schema):
 
 get_tbl_customer_income_group_schema = GetTBLCustomerIncomeGroupSchema(many=True)
 
-
 class GetTBLCustomerRegionsSchema(marsh_mallow.Schema):
     class Meta:
         fields = ('MASTER_ID'
       ,'CUSTOMER_REGION')
 
 get_tbl_customer_region_schema = GetTBLCustomerRegionsSchema(many=True)
-
 
 class GetTBLBoolValuesSchema(marsh_mallow.Schema):
     class Meta:

@@ -41,6 +41,7 @@ export default function PolicyDetailsDataTable() {
 
     const classes = useStyles();
 
+    //Variable Declartion Section
     const [getPolicyDetailsData, setPolicyDetailsData] = useState([]);
     const [getVehicleSegmentsData, setVehicleSegments] = useState([]);
     const [getFuelTypesData, setFuelTypes] = useState([]);
@@ -69,10 +70,12 @@ export default function PolicyDetailsDataTable() {
     const [disableButton, setDisableButton] = useState(true);
     const [premiumValidationMessage, setPremiumValidationMessage] = useState('');
 
+    //Handle Open for Dialog pop up
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    //Handle Close for Dialog pop up
     const handleClose = () => {
         setOpen(false);
         setDisableButton(true);
@@ -90,10 +93,12 @@ export default function PolicyDetailsDataTable() {
         setPremiumValue(0);
     };
 
+    //Handle Close for Alert pop up
     const handleAlertClose = () => {
         setAlertOpen(false);
     };
 
+    //Validates Premium value Field
     const validatePremiumField = (premiumValue) => {
         if (premiumValue > 1000000) {
             setPremiumValidationMessage('Premium value should not be greater than 1,000,000(1 million)');
@@ -105,47 +110,56 @@ export default function PolicyDetailsDataTable() {
         }
     };
 
+    //Get All policies api call
     const getAllPoliciesDetails = async () => {
         const response = await getApiCall('/api/getPoliciesDetails/');
         setPolicyDetailsData(response);
     };
 
+    //Get All vehicle segments api call
     const getAllVehicleSegments = async () => {
         const response = await getApiCall('/api/getAllVehicleSegments/');
         setVehicleSegments(response);
     };
 
+    //Get All fuel types api call
     const getFuelType = async () => {
         const response = await getApiCall('/api/getFuelType/');
         setFuelTypes(response);
     };
 
+    //Get All customer gender api call
     const getCustomerGender = async () => {
         const response = await getApiCall('/api/getCustomerGender/');
         setCustomerGenders(response);
     };
 
+    //Get All customer income group api call
     const getCustomerIncomeGroups = async () => {
         const response = await getApiCall('/api/getCustomerIncomeGroups/');
         setCustomerIncomeGroups(response);
     };
 
+    //Get All customer region api call
     const getCustomerRegions = async () => {
         const response = await getApiCall('/api/getCustomerRegions/');
         setCustomerRegions(response);
     };
 
+    //Get All common bool values api call
     const getBoolValues = async () => {
         const response = await getApiCall('/api/getBoolValues/');
         setBoolValues(response);
     };
 
+    //Handle operations after Updating the values
     const handleOperationsAfterUpdate = () => {
         handleClose();
         setAlertOpen(true);
         getAllPoliciesDetails();
     }
 
+    //Validate Selected values
     const checkForSelectedValues = (condition) => {
         if (condition === 'policy' && (getPremiumValue !== 0 || getSelectedFuelType !== '' || getSelectedBodilyInjuryLiability !== '' || getSelectedPersonalInjuryProtection !== '' ||
             getSelectedPropertyDamageLiability !== '' || getSelectedCollision !== '' || getSelectedComprehensive !== '')) {
@@ -157,6 +171,7 @@ export default function PolicyDetailsDataTable() {
         return false;
     }
 
+    //Update policy related changes by doing a PATCH Api call.
     const saveUpdatedPolicyDetails = async () => {
         const validateAndExecute = checkForSelectedValues('policy');
         if (validateAndExecute) {
@@ -178,6 +193,7 @@ export default function PolicyDetailsDataTable() {
         }
     };
 
+    //Update customer related changes by doing a PATCH Api call.
     const saveUpdatedCustomerDetails = async () => {
         const validateAndExecute = checkForSelectedValues('customer');
         if (validateAndExecute) {
@@ -195,6 +211,7 @@ export default function PolicyDetailsDataTable() {
     };
 
     useEffect(() => {
+        //Call all the API function async on page load
         trackPromise(getAllPoliciesDetails());
         getAllVehicleSegments();
         getFuelType();
@@ -204,6 +221,7 @@ export default function PolicyDetailsDataTable() {
         getBoolValues();
     }, [])
 
+    //Datatable options
     const options = {
         searchPlaceholder: 'Search Policy',
         filterType: 'multiselect',
@@ -214,8 +232,8 @@ export default function PolicyDetailsDataTable() {
         selectableRows: 'none',
         onRowClick: (rowData) => {
             {
-                handleClickOpen();
-                setSelectedPolicyData(getPolicyDetailsData.find(id => id.POLICY_ID === rowData[0]));
+                handleClickOpen();//Open the dialog pop up
+                setSelectedPolicyData(getPolicyDetailsData.find(id => id.POLICY_ID === rowData[0])); //Render the selected row values with all the inputs and dropdowns
             }
         }
     }
@@ -224,6 +242,7 @@ export default function PolicyDetailsDataTable() {
         <Fragment>
             {getPolicyDetailsData.length > 0 &&
                 <div>
+                    /*MUI data table*/
                     <MUIDataTable
                         title={"Policy Details"}
                         data={getPolicyDetailsData}
@@ -231,7 +250,7 @@ export default function PolicyDetailsDataTable() {
                         options={options}
                     />
 
-
+                    /*Dialog contains all the input fields and dropdowns*/
                     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth
                         maxWidth="xl">
                         <DialogTitle id="form-dialog-title">Update Policy Details</DialogTitle>
@@ -455,10 +474,11 @@ export default function PolicyDetailsDataTable() {
                         </DialogActions>
                     </Dialog >
 
-                    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
+                    /*Alert popup */
+                    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
                         <Alert onClose={handleClose} severity="success">
-                            Saved Successfully!
-             </Alert>
+                            Updated Successfully!
+                        </Alert>
                     </Snackbar>
                 </div>
             }

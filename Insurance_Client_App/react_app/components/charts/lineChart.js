@@ -6,6 +6,7 @@ import React, { Fragment, useEffect } from "react";
 
 export default function LineChart({ chartData }) {
 
+    //Create Line Chart and renders when region value change
     const createLineChart = () => {
 
         am4core.useTheme(am4themes_animated);
@@ -15,7 +16,7 @@ export default function LineChart({ chartData }) {
         let chart = am4core.create("lineChartdiv", am4charts.XYChart);
 
         // Add data
-        chart.data = chartData;
+        chart.data = chartData; // extracted data from DB.
 
         // Create category axis
         let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
@@ -31,7 +32,7 @@ export default function LineChart({ chartData }) {
 
         const seriesArray = { 'Series1': 'North', 'Series2': 'South', 'Series3': 'West', 'Series4': 'East' };
 
-        for (let [series, region] of Object.entries(seriesArray)) {
+        for (let [series, region] of Object.entries(seriesArray)) { // for loop to create dynamic series of line chart
             // Create series
             if (chartData.filter(idx => idx.CUSTOMER_REGION === region).length) {
                 series = chart.series.push(new am4charts.LineSeries());
@@ -73,6 +74,7 @@ export default function LineChart({ chartData }) {
     }
 
     useEffect(() => {
+        //Call the create Chart function when chart data changes
         createLineChart();
     }, [chartData])
 
