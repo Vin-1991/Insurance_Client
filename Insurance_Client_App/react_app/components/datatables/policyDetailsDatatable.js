@@ -13,11 +13,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
-
+import { trackPromise } from 'react-promise-tracker';
+import { getApiCall, patchApiCall } from '../utils/axiosApis';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -106,66 +106,38 @@ export default function PolicyDetailsDataTable() {
     };
 
     const getAllPoliciesDetails = async () => {
-        try {
-            const response = await axios.get('/api/getPoliciesDetails/');
-            setPolicyDetailsData(response.data);
-        } catch (err) {
-            console.log(err);
-        }
+        const response = await getApiCall('/api/getPoliciesDetails/');
+        setPolicyDetailsData(response);
     };
 
     const getAllVehicleSegments = async () => {
-        try {
-            const response = await axios.get('/api/getAllVehicleSegments/');
-            setVehicleSegments(response.data);
-        } catch (err) {
-            console.log(err);
-        }
+        const response = await getApiCall('/api/getAllVehicleSegments/');
+        setVehicleSegments(response);
     };
 
     const getFuelType = async () => {
-        try {
-            const response = await axios.get('/api/getFuelType/');
-            setFuelTypes(response.data);
-        } catch (err) {
-            console.log(err);
-        }
+        const response = await getApiCall('/api/getFuelType/');
+        setFuelTypes(response);
     };
 
     const getCustomerGender = async () => {
-        try {
-            const response = await axios.get('/api/getCustomerGender/');
-            setCustomerGenders(response.data);
-        } catch (err) {
-            console.log(err);
-        }
+        const response = await getApiCall('/api/getCustomerGender/');
+        setCustomerGenders(response);
     };
 
     const getCustomerIncomeGroups = async () => {
-        try {
-            const response = await axios.get('/api/getCustomerIncomeGroups/');
-            setCustomerIncomeGroups(response.data);
-        } catch (err) {
-            console.log(err);
-        }
+        const response = await getApiCall('/api/getCustomerIncomeGroups/');
+        setCustomerIncomeGroups(response);
     };
 
     const getCustomerRegions = async () => {
-        try {
-            const response = await axios.get('/api/getCustomerRegions/');
-            setCustomerRegions(response.data);
-        } catch (err) {
-            console.log(err);
-        }
+        const response = await getApiCall('/api/getCustomerRegions/');
+        setCustomerRegions(response);
     };
 
     const getBoolValues = async () => {
-        try {
-            const response = await axios.get('/api/getBoolValues/');
-            setBoolValues(response.data);
-        } catch (err) {
-            console.log(err);
-        }
+        const response = await getApiCall('/api/getBoolValues/');
+        setBoolValues(response);
     };
 
     const handleOperationsAfterUpdate = () => {
@@ -188,24 +160,20 @@ export default function PolicyDetailsDataTable() {
     const saveUpdatedPolicyDetails = async () => {
         const validateAndExecute = checkForSelectedValues('policy');
         if (validateAndExecute) {
-            try {
-                const response = await
-                    axios.patch('/api/updatePolicyDetails/', {
-                        PolicyId: getSelectedPolicyData.POLICY_ID,
-                        Premium: getPremiumValue === 0 ? getSelectedPolicyData.PREMIUM : getPremiumValue,
-                        FuelType: getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType,
-                        BodyInjuryLiability: getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability,
-                        PersonalInjuryProtection: getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection,
-                        PropertyDamageLiability: getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability,
-                        Collision: getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision,
-                        Comprehensive: getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive,
-                    });
+            const response = await
+                patchApiCall('/api/updatePolicyDetails/', {
+                    PolicyId: getSelectedPolicyData.POLICY_ID,
+                    Premium: getPremiumValue === 0 ? getSelectedPolicyData.PREMIUM : getPremiumValue,
+                    FuelType: getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType,
+                    BodyInjuryLiability: getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability,
+                    PersonalInjuryProtection: getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection,
+                    PropertyDamageLiability: getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability,
+                    Collision: getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision,
+                    Comprehensive: getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive,
+                });
 
-                if (response.status === 200) {
-                    handleOperationsAfterUpdate();
-                }
-            } catch (err) {
-                console.log(err);
+            if (response.status === 200) {
+                handleOperationsAfterUpdate();
             }
         }
     };
@@ -213,26 +181,21 @@ export default function PolicyDetailsDataTable() {
     const saveUpdatedCustomerDetails = async () => {
         const validateAndExecute = checkForSelectedValues('customer');
         if (validateAndExecute) {
-            try {
-                const response = await
-                    axios.patch('/api/updateCustomerDetails/', {
-                        CustomerId: getSelectedPolicyData.CUSTOMER_ID,
-                        IncomeGroup: getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups,
-                        Region: getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions,
-                        MaritalStatus: getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus
-                    });
-
-                if (response.status === 200) {
-                    handleOperationsAfterUpdate();
-                }
-            } catch (err) {
-                console.log(err);
+            const response = await
+                patchApiCall('/api/updateCustomerDetails/', {
+                    CustomerId: getSelectedPolicyData.CUSTOMER_ID,
+                    IncomeGroup: getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups,
+                    Region: getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions,
+                    MaritalStatus: getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus
+                });
+            if (response.status === 200) {
+                handleOperationsAfterUpdate();
             }
         }
     };
 
     useEffect(() => {
-        getAllPoliciesDetails();
+        trackPromise(getAllPoliciesDetails());
         getAllVehicleSegments();
         getFuelType();
         getCustomerGender();
@@ -500,6 +463,5 @@ export default function PolicyDetailsDataTable() {
                 </div>
             }
         </Fragment >
-
     );
 }

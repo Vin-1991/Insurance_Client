@@ -48,8 +48,11 @@
   <ItemGroup>
     <Content Include="Insurance_Client_App\react_app\components\app.js" />
     <Content Include="Insurance_Client_App\react_app\components\charts\lineChart.js" />
+    <Content Include="Insurance_Client_App\react_app\components\charts\kpiTiles.js" />
     <Content Include="Insurance_Client_App\react_app\components\datatables\policyDetailsDatatable.js" />
     <Content Include="Insurance_Client_App\react_app\components\index.js" />
+    <Content Include="Insurance_Client_App\react_app\components\utils\axiosApis.js" />
+    <Content Include="Insurance_Client_App\react_app\components\utils\busyIndicator.js" />
     <Content Include="Insurance_Client_App\react_app\components\utils\dataTableColumns.js" />
     <Content Include="Insurance_Client_App\react_app\components\views\policyDashboardView.js" />
     <Content Include="Insurance_Client_App\react_app\components\views\policyDetailsView.js" />
