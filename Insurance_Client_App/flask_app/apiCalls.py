@@ -68,7 +68,7 @@ def getBoolValues():
     jsonBoolValuesData = dbModel.get_tbl_bool_values_schema.dump(values_list)
     return jsonify(jsonBoolValuesData)
 
-@app.route('/api/updatePolicyDetails/',methods=['POST'])
+@app.route('/api/updatePolicyDetails/',methods=['PATCH'])
 def saveUpdatedPolicyDetails():
     extractQuerParams = request.get_json()
     policyId = extractQuerParams['PolicyId']
@@ -103,7 +103,7 @@ def updatePolicyDetails(fuelType,premium,bodyInjuryLiability,personalInjuryProte
     except:
         return 'An error occured'
 
-@app.route('/api/updateCustomerDetails/',methods=['POST'])
+@app.route('/api/updateCustomerDetails/',methods=['PATCH'])
 def saveUpdatedCustomerDetails():
     extractQuerParams = request.get_json()
     customerId = extractQuerParams['CustomerId']
@@ -127,8 +127,8 @@ def updateCustomerDetails(incomeGroup,region,maritalStatus,customerId):
     except:
         return 'An error occured'
 
-@app.route('/api/getBarChartData/',methods=['POST'])
-def getBarChartData():
+@app.route('/api/getLineChartData/',methods=['POST'])
+def getLineChartData():
     extractQuerParams = request.get_json()
     region = extractQuerParams['region']
     print(region)
@@ -136,3 +136,10 @@ def getBarChartData():
     chartData = sql_engine.execute(getChartData,region)
     jsonChartData = dbModel.get_no_of_policy_bought_in_region_schema.dump(chartData)
     return jsonify(jsonChartData)
+
+@app.route('/api/getKPITilesData/',methods=['GET'])
+def getKPITilesData():
+    getTilesData = "Select * from [dbo].[VW_POLICY_KPIS_TILE_DATA]"
+    kpi_data = sql_engine.execute(getTilesData)
+    jsonKPIsData = dbModel.get_vw_policy_kpis_tile_data_schema.dump(kpi_data)
+    return jsonify(jsonKPIsData)

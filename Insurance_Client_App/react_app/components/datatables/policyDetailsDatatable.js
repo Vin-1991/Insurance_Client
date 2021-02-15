@@ -190,7 +190,7 @@ export default function PolicyDetailsDataTable() {
         if (validateAndExecute) {
             try {
                 const response = await
-                    axios.post('/api/updatePolicyDetails/', {
+                    axios.patch('/api/updatePolicyDetails/', {
                         PolicyId: getSelectedPolicyData.POLICY_ID,
                         Premium: getPremiumValue === 0 ? getSelectedPolicyData.PREMIUM : getPremiumValue,
                         FuelType: getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType,
@@ -215,7 +215,7 @@ export default function PolicyDetailsDataTable() {
         if (validateAndExecute) {
             try {
                 const response = await
-                    axios.post('/api/updateCustomerDetails/', {
+                    axios.patch('/api/updateCustomerDetails/', {
                         CustomerId: getSelectedPolicyData.CUSTOMER_ID,
                         IncomeGroup: getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups,
                         Region: getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions,
@@ -247,7 +247,7 @@ export default function PolicyDetailsDataTable() {
         fixedHeader: true,
         fixedSelectColumn: true,
         print: false,
-        tableBodyHeight: '400px',
+        tableBodyHeight: '69vh',
         selectableRows: 'none',
         onRowClick: (rowData) => {
             {
@@ -259,241 +259,247 @@ export default function PolicyDetailsDataTable() {
 
     return (
         <Fragment>
-            <MUIDataTable
-                title={"Policy Details"}
-                data={getPolicyDetailsData}
-                columns={PolicyDetailsColumns}
-                options={options}
-            />
+            {getPolicyDetailsData.length > 0 &&
+                <div>
+                    <MUIDataTable
+                        title={"Policy Details"}
+                        data={getPolicyDetailsData}
+                        columns={PolicyDetailsColumns}
+                        options={options}
+                    />
 
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth
-                maxWidth="xl">
-                <DialogTitle id="form-dialog-title">Update Policy Details</DialogTitle>
 
-                <DialogContent className={classes.root}>
-                    <Grid container spacing={3} className={classes.section1}>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin="dense"
-                                id="policyid"
-                                label="Policy Id"
-                                disabled
-                                fullWidth
-                                value={getSelectedPolicyData.POLICY_ID}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <form className={classes.root} noValidate autoComplete="off">
-                                <TextField
-                                    error={validationError}
-                                    type="number"
-                                    margin="dense"
-                                    id="premium"
-                                    label="Premium"
-                                    fullWidth
-                                    value={getPremiumValue === 0 ? getSelectedPolicyData.PREMIUM : getPremiumValue}
-                                    onChange={(event) => { setPremiumValue(event.target.value); validatePremiumField(event.target.value); setDisableButton(false); }}
-                                    helperText={premiumValidationMessage}
-                                />
-                            </form>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin="dense"
-                                id="dateofpurchase"
-                                label="Date of Purchase"
-                                disabled
-                                fullWidth
-                                value={getSelectedPolicyData.DATE_OF_PURCHASE}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin="dense"
-                                id="vehicleSegment"
-                                label="Vehicle Segment"
-                                disabled
-                                fullWidth
-                                value={getSelectedPolicyData.VEHICLE_SEGMENT}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Fuel Type</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType}
-                                    onChange={(event) => { setSelectedFuelType(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getFuelTypesData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.FUEL}>{option.FUEL}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Bodily Injury Liability</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability}
-                                    onChange={(event) => { setSelectedBodilyInjuryLiability(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getBoolValuesData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Personal Injury Protection</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection}
-                                    onChange={(event) => { setSelectedPersonalInjuryProtection(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getBoolValuesData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Property Damage Liability</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability}
-                                    onChange={(event) => { setSelectedPropertyDamageLiability(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getBoolValuesData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Collision</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision}
-                                    onChange={(event) => { setSelectedCollision(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getBoolValuesData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Comprehensive</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive}
-                                    onChange={(event) => { setSelectedComprehensive(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getBoolValuesData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
+                    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth
+                        maxWidth="xl">
+                        <DialogTitle id="form-dialog-title">Update Policy Details</DialogTitle>
 
-                    <Divider variant="middle" />
-                    <Grid container spacing={3} className={classes.section2}>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin="dense"
-                                id="customerid"
-                                label="Customer Id"
-                                disabled
-                                fullWidth
-                                value={getSelectedPolicyData.CUSTOMER_ID}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin="dense"
-                                id="gender"
-                                label="Customer Gender"
-                                disabled
-                                fullWidth
-                                value={getSelectedPolicyData.CUSTOMER_GENDER}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Customer Income Group</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups}
-                                    onChange={(event) => { setSelectedCustomerIncomeGroups(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getCustomerIncomeGroupsData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.INCOME_GROUP}>{option.INCOME_GROUP}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Customer Region</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions}
-                                    onChange={(event) => { setSelectedCustomerRegions(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getCustomerRegionsData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.CUSTOMER_REGION}>{option.CUSTOMER_REGION}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel id="demo-simple-select-helper-label">Customer Marital Status</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
-                                    value={getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus}
-                                    onChange={(event) => { setSelectedCustomerMaritalStatus(event.target.value); setDisableButton(false); }}
-                                >
-                                    {getBoolValuesData.map((option, index) => {
-                                        return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => { saveUpdatedPolicyDetails(); saveUpdatedCustomerDetails(); }} variant="contained" color="primary"
-                        disabled={validationError || disableButton}>
-                        Submit
+                        <DialogContent className={classes.root}>
+                            <Grid container spacing={3} className={classes.section1}>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        margin="dense"
+                                        id="policyid"
+                                        label="Policy Id"
+                                        disabled
+                                        fullWidth
+                                        value={getSelectedPolicyData.POLICY_ID}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <form className={classes.root} noValidate autoComplete="off">
+                                        <TextField
+                                            error={validationError}
+                                            type="number"
+                                            margin="dense"
+                                            id="premium"
+                                            label="Premium"
+                                            fullWidth
+                                            value={getPremiumValue === 0 ? getSelectedPolicyData.PREMIUM : getPremiumValue}
+                                            onChange={(event) => { setPremiumValue(event.target.value); validatePremiumField(event.target.value); setDisableButton(false); }}
+                                            helperText={premiumValidationMessage}
+                                        />
+                                    </form>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        margin="dense"
+                                        id="dateofpurchase"
+                                        label="Date of Purchase"
+                                        disabled
+                                        fullWidth
+                                        value={getSelectedPolicyData.DATE_OF_PURCHASE}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        margin="dense"
+                                        id="vehicleSegment"
+                                        label="Vehicle Segment"
+                                        disabled
+                                        fullWidth
+                                        value={getSelectedPolicyData.VEHICLE_SEGMENT}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Fuel Type</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedFuelType === '' ? getSelectedPolicyData.FUEL : getSelectedFuelType}
+                                            onChange={(event) => { setSelectedFuelType(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getFuelTypesData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.FUEL}>{option.FUEL}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Bodily Injury Liability</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedBodilyInjuryLiability === '' ? getSelectedPolicyData.BODILY_INJURY_LIABILITY : getSelectedBodilyInjuryLiability}
+                                            onChange={(event) => { setSelectedBodilyInjuryLiability(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getBoolValuesData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Personal Injury Protection</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedPersonalInjuryProtection === '' ? getSelectedPolicyData.PERSONAL_INJURY_PROTECTION : getSelectedPersonalInjuryProtection}
+                                            onChange={(event) => { setSelectedPersonalInjuryProtection(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getBoolValuesData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Property Damage Liability</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedPropertyDamageLiability === '' ? getSelectedPolicyData.PROPERTY_DAMAGE_LIABILITY : getSelectedPropertyDamageLiability}
+                                            onChange={(event) => { setSelectedPropertyDamageLiability(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getBoolValuesData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Collision</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedCollision === '' ? getSelectedPolicyData.COLLISION : getSelectedCollision}
+                                            onChange={(event) => { setSelectedCollision(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getBoolValuesData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Comprehensive</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedComprehensive === '' ? getSelectedPolicyData.COMPREHENSIVE : getSelectedComprehensive}
+                                            onChange={(event) => { setSelectedComprehensive(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getBoolValuesData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+
+                            <Divider variant="middle" />
+                            <Grid container spacing={3} className={classes.section2}>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        margin="dense"
+                                        id="customerid"
+                                        label="Customer Id"
+                                        disabled
+                                        fullWidth
+                                        value={getSelectedPolicyData.CUSTOMER_ID}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        margin="dense"
+                                        id="gender"
+                                        label="Customer Gender"
+                                        disabled
+                                        fullWidth
+                                        value={getSelectedPolicyData.CUSTOMER_GENDER}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Customer Income Group</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedCustomerIncomeGroups === '' ? getSelectedPolicyData.CUSTOMER_INCOME_GROUP : getSelectedCustomerIncomeGroups}
+                                            onChange={(event) => { setSelectedCustomerIncomeGroups(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getCustomerIncomeGroupsData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.INCOME_GROUP}>{option.INCOME_GROUP}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Customer Region</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedCustomerRegions === '' ? getSelectedPolicyData.CUSTOMER_REGION : getSelectedCustomerRegions}
+                                            onChange={(event) => { setSelectedCustomerRegions(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getCustomerRegionsData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.CUSTOMER_REGION}>{option.CUSTOMER_REGION}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <FormControl className={classes.formControl} fullWidth>
+                                        <InputLabel id="demo-simple-select-helper-label">Customer Marital Status</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-helper-label"
+                                            id="demo-simple-select-helper"
+                                            value={getSelectedCustomerMaritalStatus === '' ? getSelectedPolicyData.CUSTOMER_MARITAL_STATUS : getSelectedCustomerMaritalStatus}
+                                            onChange={(event) => { setSelectedCustomerMaritalStatus(event.target.value); setDisableButton(false); }}
+                                        >
+                                            {getBoolValuesData.map((option, index) => {
+                                                return <MenuItem key={option.MASTER_ID} value={option.BOOL_VALUES}>{option.BOOL_VALUES}</MenuItem>;
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => { saveUpdatedPolicyDetails(); saveUpdatedCustomerDetails(); }} variant="contained" color="primary"
+                                disabled={validationError || disableButton}>
+                                Submit
                     </Button>
-                    <Button onClick={handleClose} variant="outlined" color="secondary">
-                        Close
+                            <Button onClick={handleClose} variant="outlined" color="secondary">
+                                Close
                     </Button>
-                </DialogActions>
-            </Dialog >
+                        </DialogActions>
+                    </Dialog >
 
-            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
-                <Alert onClose={handleClose} severity="success">
-                    Saved Successfully!
+                    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose}>
+                        <Alert onClose={handleClose} severity="success">
+                            Saved Successfully!
              </Alert>
-            </Snackbar>
+                    </Snackbar>
+                </div>
+            }
         </Fragment >
+
     );
 }

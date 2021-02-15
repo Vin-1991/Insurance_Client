@@ -25,11 +25,11 @@ import PolicyDashboard from '../components/views/policyDashboardView';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        marginTop:'7vh'
     },
     title: {
         flexGrow: 1,
     },
-    appBarSpacer: theme.mixins.toolbar,
     content: {
         flexGrow: 1,
         width: '100% !important'
@@ -43,7 +43,7 @@ const App = () => {
     return (
         <div className={classes.root}>
             <CssBaseline />
-            <AppBar position="fixed" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            <AppBar position="fixed" >
                 <Toolbar className={classes.toolbar} variant="dense">
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         Insurance Policy Portal
@@ -68,7 +68,6 @@ const App = () => {
                             <Switch>
                                 <Route exact path="/insurance_client_home" component={PolicyDetails} />
                                 <Route exact path="/insurance_client_dashboard" component={PolicyDashboard} />
-                                <Redirect to="/insurance_client_home" />
                             </Switch>
                         </Router>
                     </Grid>

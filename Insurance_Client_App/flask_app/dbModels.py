@@ -82,3 +82,12 @@ class GetVWNoOfPolicyBoughtInRegionSchema(marsh_mallow.Schema):
       ,'West')
 
 get_no_of_policy_bought_in_region_schema = GetVWNoOfPolicyBoughtInRegionSchema(many=True)
+
+class GetVWPolicyKPIsTileDataSchema(marsh_mallow.Schema):
+    class Meta:
+        fields = ('CUSTOMER_REGION'
+      ,'UNIQUE_MONTH'
+      ,'TOTAL_POLICIES_BOUGHT'
+      ,'VEHICLE_SEGMENT')
+
+get_vw_policy_kpis_tile_data_schema = GetVWPolicyKPIsTileDataSchema(many=True)

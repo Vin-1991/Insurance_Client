@@ -1,15 +1,15 @@
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import am4themes_material from "@amcharts/amcharts4/themes/material";
 import React, { Fragment, useEffect } from "react";
 
 export default function LineChart({ chartData }) {
 
-    am4core.useTheme(am4themes_animated);
-
     const createLineChart = () => {
+
         am4core.useTheme(am4themes_animated);
-        // Themes end
+        am4core.useTheme(am4themes_material);
 
         // Create chart instance
         let chart = am4core.create("lineChartdiv", am4charts.XYChart);
@@ -20,11 +20,11 @@ export default function LineChart({ chartData }) {
         // Create category axis
         let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
         categoryAxis.dataFields.category = "UNIQUE_MONTH";
-        categoryAxis.renderer.opposite = true;
+        categoryAxis.renderer.opposite = false;
 
         // Create value axis
         let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        valueAxis.renderer.inversed = true;
+        valueAxis.renderer.inversed = false;
         valueAxis.title.text = "No. of Policies bought";
         valueAxis.renderer.minLabelPosition = 0.01;
 
@@ -68,6 +68,8 @@ export default function LineChart({ chartData }) {
                 segment.isHover = false;
             })
         })
+
+        am4core.options.autoDispose = true;
     }
 
     useEffect(() => {
@@ -76,7 +78,7 @@ export default function LineChart({ chartData }) {
 
     return (
         <Fragment>
-            <div id="lineChartdiv" style={{ width: "100%", height: "75vh" }}></div>
+            <div id="lineChartdiv" style={{ width: "100%", height: "67vh" }}></div>
         </Fragment>
     );
 
