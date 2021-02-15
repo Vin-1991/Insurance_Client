@@ -61,16 +61,16 @@ const App = () => {
                 </Toolbar>
             </AppBar>
 
-            /*Routes*/
+            {/*Routes*/}
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="xl">
                     <Grid container spacing={2}>
                         <Router>
                             <Switch>
-                                /*Policy details component*/
+                                {/*Policy details component*/}
                                 <Route exact path="/insurance_client_home" component={PolicyDetails} />
-                                /*Policy dashboard component*/
+                                {/*Policy dashboard component*/}
                                 <Route exact path="/insurance_client_dashboard" component={PolicyDashboard} />
                             </Switch>
                         </Router>

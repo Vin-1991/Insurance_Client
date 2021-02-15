@@ -24,8 +24,9 @@ export default function PolicyDashboardKPIs({ tilesData }) {
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     return (
-        /*KPI Tiles*/
+
         <Fragment>
+            {/*KPI Tiles*/}
             <Grid container spacing={1}>
                 <Grid item xs={12} md={4} lg={3}>
 

@@ -242,7 +242,7 @@ export default function PolicyDetailsDataTable() {
         <Fragment>
             {getPolicyDetailsData.length > 0 &&
                 <div>
-                    /*MUI data table*/
+                    {/*MUI data table*/}
                     <MUIDataTable
                         title={"Policy Details"}
                         data={getPolicyDetailsData}
@@ -250,7 +250,7 @@ export default function PolicyDetailsDataTable() {
                         options={options}
                     />
 
-                    /*Dialog contains all the input fields and dropdowns*/
+                    {/*Dialog contains all the input fields and dropdowns*/}
                     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth
                         maxWidth="xl">
                         <DialogTitle id="form-dialog-title">Update Policy Details</DialogTitle>
@@ -474,7 +474,7 @@ export default function PolicyDetailsDataTable() {
                         </DialogActions>
                     </Dialog >
 
-                    /*Alert popup */
+                    {/*Alert popup */}
                     <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
                         <Alert onClose={handleClose} severity="success">
                             Updated Successfully!

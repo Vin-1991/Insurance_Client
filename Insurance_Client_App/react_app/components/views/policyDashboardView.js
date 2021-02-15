@@ -72,7 +72,7 @@ export default function PolicyDashboard() {
 
     return (
         <Fragment>
-            /*KPI tiles component*/
+            {/*KPI tiles component*/}
             {getTilesData.length > 0 && <PolicyDashboardKPIs tilesData={getTilesData} />}
 
             {getLineChartData.length > 0 && <Grid item xs={12} md={12} lg={12}>
@@ -90,7 +90,7 @@ export default function PolicyDashboard() {
                     </Select>
                 </FormControl>
 
-                /*Line Chart component*/
+                {/*Line Chart component*/}
                 <LineChart chartData={getLineChartData} />
             </Grid>}
         </Fragment >
