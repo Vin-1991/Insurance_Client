@@ -100,8 +100,12 @@ export default function PolicyDetailsDataTable() {
 
     //Validates Premium value Field
     const validatePremiumField = (premiumValue) => {
-        if (premiumValue > 1000000) {
-            setPremiumValidationMessage('Premium value should not be greater than 1,000,000(1 million)');
+        if (parseInt(premiumValue) === 0 || premiumValue >= 1000000) {
+            setPremiumValidationMessage('Premium value should be greater than 0 and less than 1,000,000(1 million)');
+            setValidationError(true);
+        }
+        else if (premiumValue === '') {
+            setPremiumValidationMessage('Premium value should not be blank');
             setValidationError(true);
         }
         else {
