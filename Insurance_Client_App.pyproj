@@ -56,6 +56,7 @@
     <Content Include="Insurance_Client_App\react_app\components\utils\dataTableColumns.js" />
     <Content Include="Insurance_Client_App\react_app\components\views\policyDashboardView.js" />
     <Content Include="Insurance_Client_App\react_app\components\views\policyDetailsView.js" />
+    <Content Include="Insurance_Client_App\react_app\dist\favicon.ico" />
     <Content Include="Insurance_Client_App\react_app\html\clientvizview.html" />
     <Content Include="Insurance_Client_App\react_app\html\clientdetialsview.html" />
     <Content Include="Insurance_Client_App\react_app\html\layout.html" />

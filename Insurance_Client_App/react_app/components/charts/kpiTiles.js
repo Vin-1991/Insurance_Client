@@ -1,4 +1,4 @@
-﻿import React, { Fragment } from 'react';
+﻿import React, { Fragment, memo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
@@ -18,8 +18,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-export default function PolicyDashboardKPIs({ tilesData }) {
+function PolicyDashboardKPIs({ tilesData }) {
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -58,3 +57,5 @@ export default function PolicyDashboardKPIs({ tilesData }) {
     );
 
 }
+
+export default memo(PolicyDashboardKPIs);

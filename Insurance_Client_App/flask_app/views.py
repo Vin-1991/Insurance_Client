@@ -13,6 +13,9 @@ import time
 import os
 import datetime
 
+@app.route('/favicon.ico') 
+def favicon():
+    return send_from_directory('./react_app/dist', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 #@app.route('/')
 @app.route('/insurance_client_home')
