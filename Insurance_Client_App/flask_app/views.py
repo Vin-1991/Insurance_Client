@@ -8,7 +8,6 @@ from flask import render_template, Flask,send_from_directory,jsonify
 from Insurance_Client_App import app
 import json
 import collections
-import psycopg2
 import time
 import os
 import datetime
