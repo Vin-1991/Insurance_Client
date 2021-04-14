@@ -1,3 +1,2 @@
 flask
-https://www.hfmtalentindex.com/en/candidates/
-http://www.talentindex.eu/deloitte/login/setup?token=k-qSyVr8R2zNyiJy2-j407IO3lKa4lKT:HFMLHZ3nu_r4VP8gYyZDCmBLfYI
+https://tara.vitapowered.com/workflowengine/workflow/Amazon_HIRE/start/33666b02-2e8f-414a-8a57-1bda243bb3ac
